@@ -5,7 +5,8 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import maya.cmds as cmds
 
-def create_joint_symmetry() -> None:
+def create_joint_symmetry():
+    # type: () -> None
     """
     Sets up a symmetry constraint between two selected joints in Maya.
     """
@@ -15,7 +16,8 @@ def create_joint_symmetry() -> None:
     # Set up the symmetry constraint between the selected joints
     set_symmetry_constraint(selected_joints[0], selected_joints[1])
 
-def set_symmetry_constraint(source_joint: str, target_joint: str) -> None:
+def set_symmetry_constraint(source_joint, target_joint):
+    # type: (str, str) -> None
     """
     Creates a symmetry constraint between the source and target joints.
     """
@@ -40,7 +42,8 @@ def set_symmetry_constraint(source_joint: str, target_joint: str) -> None:
     cmds.connectAttr(sym_node + ".targetJointOrient", target_joint + ".jointOrient")
     cmds.connectAttr(target_joint + ".parentInverseMatrix[0]", sym_node + ".constraintInverseParentWorldMatrix")
 
-def execute() -> None:
+def execute():
+    # type: () -> None
     create_joint_symmetry()
 
 if __name__ == '__main__':
