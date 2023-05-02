@@ -134,12 +134,31 @@ def set_symmetry_constraint(source_joint, target_joint, axis="X"):
     cmds.connectAttr(pma_node_rot + ".output3D", target_joint + ".rotate")
     cmds.connectAttr(pma_node_scale + ".output", target_joint + ".scale")
 
-    def delete_pma_nodes():
+    def delete_added_elements():
         # type: () -> None
-        # Delete the pma nodes
-        cmds.delete(target_joint + "_pma_translate")
-        cmds.delete(target_joint + "_pma_rotate")
-        cmds.delete(target_joint + "_pma_scale")
+        # Delete the added attributes on the target joint if they exist
+        if cmds.objExists(target_joint + ".offsetTranslate"):
+            cmds.deleteAttr(target_joint + ".offsetTranslate")
+        if cmds.objExists(target_joint + ".offsetRotate"):
+            cmds.deleteAttr(target_joint + ".offsetRotate")
+        if cmds.objExists(target_joint + ".offsetScale"):
+            cmds.deleteAttr(target_joint + ".offsetScale")
+
+        # Delete the added plus minus average nodes on the target joint if they exist
+        if cmds.objExists(target_joint + "_pma_translate"):
+            cmds.delete(target_joint + "_pma_translate")
+        if cmds.objExists(target_joint + "_pma_rotate"):
+            cmds.delete(target_joint + "_pma_rotate")
+        if cmds.objExists(target_joint + "_pma_scale"):
+            cmds.delete(target_joint + "_pma_scale")
+
+        # Delete the symmetry constraint node if it exists
+        if cmds.objExists(sym_node):
+            cmds.delete(sym_node)
+
+        # Delete the added attribute for the script job IDs on the target joint if it exists
+        if cmds.objExists(target_joint + ".symmetryConstraintScriptJobIDs"):
+            cmds.deleteAttr(target_joint + ".symmetryConstraintScriptJobIDs")
 
         for job_id in job_id_list:
             # Delete the script job
@@ -149,19 +168,24 @@ def set_symmetry_constraint(source_joint, target_joint, axis="X"):
     job_id_list = [] # type: List[int]
 
     # Create a script job to delete the pma nodes when the symmetry constraint node is deleted
-    job_id_list.append(cmds.scriptJob(nodeDeleted=[sym_node, delete_pma_nodes], runOnce=True, killWithScene=True))
+    job_id_list.append(cmds.scriptJob(nodeDeleted=[sym_node, delete_added_elements], runOnce=True, killWithScene=True))
 
     # Create a script job to delete the pma nodes when the target joint is deleted
-    job_id_list.append(cmds.scriptJob(nodeDeleted=[target_joint, delete_pma_nodes], runOnce=True, killWithScene=True))
+    job_id_list.append(cmds.scriptJob(nodeDeleted=[target_joint, delete_added_elements], runOnce=True, killWithScene=True))
 
     # Create a script job to delete the pma nodes when the source joint is deleted
-    job_id_list.append(cmds.scriptJob(nodeDeleted=[source_joint, delete_pma_nodes], runOnce=True, killWithScene=True))
+    job_id_list.append(cmds.scriptJob(nodeDeleted=[source_joint, delete_added_elements], runOnce=True, killWithScene=True))
 
     # Create a script job to delete the pma nodes when scene opens
-    job_id_list.append(cmds.scriptJob(event=["SceneOpened", delete_pma_nodes], runOnce=True, killWithScene=True))
+    job_id_list.append(cmds.scriptJob(event=["SceneOpened", delete_added_elements], runOnce=True, killWithScene=True))
 
     # Create a script job to delete the pma nodes when Maya is closed
-    job_id_list.append(cmds.scriptJob(event=["quitApplication", delete_pma_nodes], runOnce=True, killWithScene=True))
+    job_id_list.append(cmds.scriptJob(event=["quitApplication", delete_added_elements], runOnce=True, killWithScene=True))
+
+    # Check if the attribute already exists on the target joint
+    # If it does, delete it
+    if cmds.objExists(target_joint + ".symmetryConstraintScriptJobIDs"):
+        cmds.deleteAttr(target_joint + ".symmetryConstraintScriptJobIDs")
 
     # Create new attributes on the target joint to store the script job IDs
     cmds.addAttr(target_joint, longName="symmetryConstraintScriptJobIDs", attributeType="long", multi=True)
