@@ -13,14 +13,14 @@ def create_joint_symmetry():
     # Get the selected joints
     selected_joints = cmds.ls(selection=True)
 
-    # Check if the selected joints are valid
-    if not all(cmds.objectType(joint) == "joint" for joint in selected_joints):
-        cmds.warning("Please select two valid joints to set up a symmetry constraint.")
-        return
-
     # Check if two joints are selected
     if len(selected_joints) != 2:
         cmds.warning("Please select two joints to set up a symmetry constraint.")
+        return
+
+    # Check if the selected joints are valid
+    if not all(cmds.objectType(joint) == "joint" for joint in selected_joints):
+        cmds.warning("Please select two valid joints to set up a symmetry constraint.")
         return
 
     # Set up the symmetry constraint between the selected joints
@@ -35,11 +35,6 @@ def set_symmetry_constraint(source_joint, target_joint):
     """
     Creates a symmetry constraint between the source and target joints.
     """
-    # Check if the source joint and target joint have the same parent
-    if cmds.listRelatives(source_joint, parent=True) == cmds.listRelatives(target_joint, parent=True):
-        cmds.warning("The source joint and target joint have the same parent. Please select a different target joint.")
-        return
-
     # Check if the source joint already has a symmetry constraint
     if cmds.objExists(source_joint + "_symmetry_constraint"):
         cmds.warning("The source joint already has a symmetry constraint. Please delete it before running this script.")
@@ -51,9 +46,18 @@ def set_symmetry_constraint(source_joint, target_joint):
         return
 
     # Add the offset attributes to the target joint
-    cmds.addAttr(target_joint, longName="offsetTranslate", attributeType="double3", keyable=True, defaultValue=[0.0, 0.0, 0.0])
-    cmds.addAttr(target_joint, longName="offsetRotate", attributeType="double3", keyable=True, defaultValue=[0.0, 0.0, 0.0])
-    cmds.addAttr(target_joint, longName="offsetScale", attributeType="double3", keyable=True, defaultValue=[1.0, 1.0, 1.0])
+    cmds.addAttr(target_joint, longName="offsetTranslate", attributeType="double3", keyable=True)
+    cmds.addAttr(target_joint, longName="offsetTranslateX", attributeType="double", defaultValue=0.0, keyable=True, parent="offsetTranslate")
+    cmds.addAttr(target_joint, longName="offsetTranslateY", attributeType="double", defaultValue=0.0, keyable=True, parent="offsetTranslate")
+    cmds.addAttr(target_joint, longName="offsetTranslateZ", attributeType="double", defaultValue=0.0, keyable=True, parent="offsetTranslate")
+    cmds.addAttr(target_joint, longName="offsetRotate", attributeType="double3", keyable=True)
+    cmds.addAttr(target_joint, longName="offsetRotateX", attributeType="double", defaultValue=0.0, keyable=True, parent="offsetRotate")
+    cmds.addAttr(target_joint, longName="offsetRotateY", attributeType="double", defaultValue=0.0, keyable=True, parent="offsetRotate")
+    cmds.addAttr(target_joint, longName="offsetRotateZ", attributeType="double", defaultValue=0.0, keyable=True, parent="offsetRotate")
+    cmds.addAttr(target_joint, longName="offsetScale", attributeType="double3", keyable=True)
+    cmds.addAttr(target_joint, longName="offsetScaleX", attributeType="double", defaultValue=1.0, keyable=True, parent="offsetScale")
+    cmds.addAttr(target_joint, longName="offsetScaleY", attributeType="double", defaultValue=1.0, keyable=True, parent="offsetScale")
+    cmds.addAttr(target_joint, longName="offsetScaleZ", attributeType="double", defaultValue=1.0, keyable=True, parent="offsetScale")
 
     # Create a name for the symmetry constraint node
     symmetry_constraint_name = target_joint + "_symmetry_constraint"
@@ -144,9 +148,9 @@ def execute():
     # type: () -> None
     try:
         # Open an undo chunk
-        with cmds.undoInfo(openChunk=True):
-            # Create the joint symmetry
-            create_joint_symmetry()
+        cmds.undoInfo(openChunk=True)
+        # Create the joint symmetry
+        create_joint_symmetry()
     except Exception as e:
         # Print the error message
         cmds.warning("An error occurred: {}".format(str(e)))
