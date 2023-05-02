@@ -22,7 +22,7 @@ This is a Maya Python script that provides a simple UI for setting up a symmetry
 
 To use the Joint Symmetry Tool:
 
-1. Click the Joint Symmetry Tool button you registered on the shelf to open the UI.
+1. Click the button on the shelf that you registered the Joint Symmetry Tool to open the UI.
 2. Select the two joints you want to set up a symmetry constraint between. The first joint you select will be the source joint, and the second joint you select will be the target joint.
 3. Select the axis of symmetry (X, Y, or Z).
 4. Click the `Set Up Symmetry Constraint` button.
