@@ -5,8 +5,8 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import maya.cmds as cmds
 
-def create_joint_symmetry():
-    # type: () -> None
+def create_joint_symmetry(axis="X"):
+    # type: (str) -> None
     """
     Sets up a symmetry constraint between two selected joints in Maya.
     """
@@ -25,13 +25,13 @@ def create_joint_symmetry():
 
     # Set up the symmetry constraint between the selected joints
     try:
-        set_symmetry_constraint(selected_joints[0], selected_joints[1])
+        set_symmetry_constraint(selected_joints[0], selected_joints[1], axis)
     except Exception as e:
         # Print the error message
         cmds.warning("An error occurred: {}".format(str(e)))
 
-def set_symmetry_constraint(source_joint, target_joint):
-    # type: (str, str) -> None
+def set_symmetry_constraint(source_joint, target_joint, axis="X"):
+    # type: (str, str, str) -> None
     """
     Creates a symmetry constraint between the source and target joints.
     """
@@ -44,6 +44,15 @@ def set_symmetry_constraint(source_joint, target_joint):
     if cmds.objExists(target_joint + "_symmetry_constraint"):
         cmds.warning("The target joint already has a symmetry constraint. Please delete it before running this script.")
         return
+
+    # Check if the offset attributes already exist on the target joint
+    # If they do, delete them
+    if cmds.objExists(target_joint + ".offsetTranslate"):
+        cmds.deleteAttr(target_joint + ".offsetTranslate")
+    if cmds.objExists(target_joint + ".offsetRotate"):
+        cmds.deleteAttr(target_joint + ".offsetRotate")
+    if cmds.objExists(target_joint + ".offsetScale"):
+        cmds.deleteAttr(target_joint + ".offsetScale")
 
     # Add the offset attributes to the target joint
     cmds.addAttr(target_joint, longName="offsetTranslate", attributeType="double3", keyable=True)
@@ -64,6 +73,23 @@ def set_symmetry_constraint(source_joint, target_joint):
 
     # Create the symmetry constraint and parent it to the target joint
     sym_node = cmds.createNode("symmetryConstraint", name=symmetry_constraint_name, parent=target_joint)
+
+    # Set the axis attribute of the symmetry constraint
+    cmds.setAttr(sym_node + ".{}Axis".format(axis.lower()), 1)
+
+    # Set the other axis attributes to 0
+    for axis_name in ["X", "Y", "Z"]:
+        if axis_name != axis:
+            cmds.setAttr(sym_node + ".{}Axis".format(axis_name.lower()), 0)
+
+    # Check if plus minus average nodes already exist on the target joint
+    # If they do, delete them
+    if cmds.objExists(target_joint + "_pma_translate"):
+        cmds.delete(target_joint + "_pma_translate")
+    if cmds.objExists(target_joint + "_pma_rotate"):
+        cmds.delete(target_joint + "_pma_rotate")
+    if cmds.objExists(target_joint + "_pma_scale"):
+        cmds.delete(target_joint + "_pma_scale")
 
     # Create a plus minus average node to offset the target joint
     pma_node_trans = cmds.createNode("plusMinusAverage", name=target_joint + "_pma_translate")
@@ -144,13 +170,13 @@ def set_symmetry_constraint(source_joint, target_joint):
     for i, job_id in enumerate(job_id_list):
         cmds.setAttr(target_joint + ".symmetryConstraintScriptJobIDs[" + str(i) + "]", job_id)
 
-def execute():
-    # type: () -> None
+def execute(axis="X"):
+    # type: (str) -> None
     try:
         # Open an undo chunk
         cmds.undoInfo(openChunk=True)
         # Create the joint symmetry
-        create_joint_symmetry()
+        create_joint_symmetry(axis=axis)
     except Exception as e:
         # Print the error message
         cmds.warning("An error occurred: {}".format(str(e)))
