@@ -6,9 +6,19 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import maya.cmds as cmds
 
 def create_joint_symmetry(axis="X"):
-    # type: (str) -> None
     """
     Sets up a symmetry constraint between two selected joints in Maya.
+
+    Args:
+        axis (str): The axis of symmetry. Can be "X", "Y", or "Z".
+
+    Returns:
+        None
+
+    Raises:
+        RuntimeError: If the source joint already has a symmetry constraint.
+        RuntimeError: If the target joint already has a symmetry constraint.
+        RuntimeError: If the offset attributes already exist on the target joint.
     """
     # Get the selected joints
     selected_joints = cmds.ls(selection=True)
@@ -31,9 +41,27 @@ def create_joint_symmetry(axis="X"):
         cmds.warning("An error occurred: {}".format(str(e)))
 
 def set_symmetry_constraint(source_joint, target_joint, axis="X"):
-    # type: (str, str, str) -> None
     """
     Creates a symmetry constraint between the source and target joints.
+
+    Args:
+        source_joint (str): The source joint.
+        target_joint (str): The target joint.
+        axis (str): The axis of symmetry. Can be "X", "Y", or "Z".
+
+    Returns:
+        None
+
+    Raises:
+        RuntimeError: If the source joint already has a symmetry constraint.
+        RuntimeError: If the target joint already has a symmetry constraint.
+
+    Notes:
+        The source joint is the joint that will drive the target joint.
+        The target joint is the joint that will be driven by the source joint.
+
+        The axis of symmetry is the axis that the target joint will be mirrored across.
+        For example, if the axis of symmetry is "X", the target joint will be mirrored across the X axis.
     """
     # Check if the source joint already has a symmetry constraint
     if cmds.objExists(source_joint + "_symmetry_constraint"):
@@ -135,7 +163,9 @@ def set_symmetry_constraint(source_joint, target_joint, axis="X"):
     cmds.connectAttr(pma_node_scale + ".output", target_joint + ".scale")
 
     def delete_added_elements():
-        # type: () -> None
+        """
+        Deletes the added elements on the target joint
+        """
         # Delete the added attributes on the target joint if they exist
         if cmds.objExists(target_joint + ".offsetTranslate"):
             cmds.deleteAttr(target_joint + ".offsetTranslate")
@@ -195,7 +225,12 @@ def set_symmetry_constraint(source_joint, target_joint, axis="X"):
         cmds.setAttr(target_joint + ".symmetryConstraintScriptJobIDs[" + str(i) + "]", job_id)
 
 def execute(axis="X"):
-    # type: (str) -> None
+    """
+    Executes the script
+
+    Args:
+        axis: The axis to mirror the joint on
+    """
     try:
         # Open an undo chunk
         cmds.undoInfo(openChunk=True)
