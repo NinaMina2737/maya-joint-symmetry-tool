@@ -1,3 +1,8 @@
+#!/usr/bin/env python
+# coding=utf-8
+
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import maya.cmds as cmds
 
 from maya.app.general.mayaMixin import MayaQWidgetBaseMixin
@@ -8,6 +13,17 @@ reload(cjs)
 
 class JointSymmetryUI(MayaQWidgetBaseMixin, QtWidgets.QWidget):
     def __init__(self):
+        """
+        Initializes the class.
+
+        Attributes:
+            axis_label (QtWidgets.QLabel): A label for the axis of symmetry.
+            axis_combo (QtWidgets.QComboBox): A combo box for the axis of symmetry.
+            symmetry_button (QtWidgets.QPushButton): A button to set up the symmetry constraint.
+            axis_layout (QtWidgets.QHBoxLayout): A layout for the axis of symmetry.
+            button_layout (QtWidgets.QHBoxLayout): A layout for the button.
+            main_layout (QtWidgets.QVBoxLayout): A main layout for the window.
+        """
         super(self.__class__, self).__init__()
 
         # Set the window title and size
@@ -45,7 +61,6 @@ class JointSymmetryUI(MayaQWidgetBaseMixin, QtWidgets.QWidget):
         self.setLayout(self.main_layout)
 
     def create_joint_symmetry(self):
-        # type: (str) -> None
         """
         Creates a joint symmetry constraint on the selected joints.
         """
@@ -53,7 +68,6 @@ class JointSymmetryUI(MayaQWidgetBaseMixin, QtWidgets.QWidget):
         cjs.execute(axis=axis)
 
 def execute():
-    # type: () -> None
     """
     Executes the joint symmetry UI.
     """
