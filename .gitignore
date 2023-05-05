@@ -1,4 +1,5 @@
+# batch files
 *.bat
 
-# cache
+# compiled python files
 *.pyc
