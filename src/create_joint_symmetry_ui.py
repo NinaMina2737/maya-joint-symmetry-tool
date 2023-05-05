@@ -1,12 +1,12 @@
 import maya.cmds as cmds
 
 from maya.app.general.mayaMixin import MayaQWidgetBaseMixin
-from PySide2 import QtGui, QtCore, QtWidgets
+from PySide2 import QtCore, QtWidgets
 
 import create_joint_symmetry as cjs
 reload(cjs)
 
-class JointSymmetryUI(MayaQWidgetBaseMixin, QtWidgets.QDialog):
+class JointSymmetryUI(MayaQWidgetBaseMixin, QtWidgets.QWidget):
     def __init__(self):
         super(self.__class__, self).__init__()
 
