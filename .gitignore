@@ -1,5 +1,5 @@
-# batch files
+# Batch files
 *.bat
 
-# compiled python files
+# Compiled python files
 *.pyc
