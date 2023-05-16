@@ -1,4 +1,4 @@
-# Joint Symmetry Tool
+# Maya Joint Symmetry Tool
 
 [English](README.md)
 
@@ -11,18 +11,16 @@ Joint Symmetry Toolは、2つの選択されたジョイント間にシンメト
 
 ## インストール
 
-1. このリポジトリをクローンするか、ZIPファイルをダウンロードします。
-2. `create_joint_symmetry_ui.py`と`create_joint_symmetry.py`とをMayaのスクリプト用のディレクトリにコピーします。デフォルトの場所は、Windowsの場合は `C:\Users\<username>\Documents\maya\scripts`、macOSの場合は `/Users/<username>/Library/Preferences/Autodesk/maya/scripts` です。
-3. Mayaを開き、スクリプトエディタ（`Windows> General Editors> Script Editor`）を開きます。
-4. スクリプトエディタで、`File> Open Script`を選択し、スクリプトを保存したディレクトリに移動します。
-5. `create_joint_symmetry_ui.py`を開きます。
-6. `File> Save Script to Shelf...`を選択し、スクリプトをシェルフに保存して簡単にアクセスできるようにします。
+1. [最新リリース](https://github.com/NinaMina2737/maya-joint-symmetry-tool/releases/latest)をダウンロードし、アーカイブを展開してください。
+2. `maya-joint-symmetry-tool`フォルダを Maya のスクリプトフォルダに移動してください。(例: `C:\Users\<user>\Documents\maya\scripts`)
+3. `install.py`をMayaのビューポートにドラッグ&ドロップしてください。
+4. これで、アクティブなシェルフに`jointSymmetryTool`が追加されます。
 
 ## 使い方
 
 Joint Symmetry Toolを使用するには、以下の手順に従ってください。
 
-1. Joint Symmetry Toolを登録したシェルフのボタンをクリックしてUIを開きます。
+1. シェルフから`jointSymmetryTool`を実行してください。
 2. シンメトリコンストレイントを設定したい2つのジョイントを選択します。最初に選択したジョイントはソースジョイントに、2番目に選択したジョイントはターゲットジョイントになります。
 3. 対称軸（X、Y、またはZ）を選択します。
 4. `Set Up Symmetry Constraint`ボタンをクリックします。
