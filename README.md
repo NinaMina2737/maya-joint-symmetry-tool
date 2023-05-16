@@ -1,4 +1,4 @@
-# Joint Symmetry Tool
+# Maya Joint Symmetry Tool
 
 [Japanese](README-ja.md)
 
@@ -11,18 +11,16 @@ This is a Maya Python script that provides a simple UI for setting up a symmetry
 
 ## Installation
 
-1. Clone this repository or download the ZIP file.
-2. Copy the `create_joint_symmetry_ui.py` and `create_joint_symmetry.py` scripts to your Maya scripts directory. The default location for this directory is `C:\Users\<username>\Documents\maya\scripts` on Windows and `/Users/<username>/Library/Preferences/Autodesk/maya/scripts` on macOS.
-3. In Maya, open the Script Editor (`Windows > General Editors > Script Editor`).
-4. In the Script Editor, select `File > Open Script` and navigate to the directory where you saved the scripts.
-5. Open the `create_joint_symmetry_ui.py` script.
-6. Select `File > Save Script to Shelf...` and save the script to your shelf for easy access.
+1. Download zip file from [latest release](https://github.com/NinaMina2737/maya-joint-symmetry-tool/releases/latest). and extract the archive.
+2. Move `maya-joint-symmetry-tool` folder to your Maya's script folder (e.g. `C:\Users\<user>\Documents\maya\scripts`)
+3. Drag and drop `install.py` to Maya's viewport.
+4. Then, you can see `jointSymmetryTool` in your active shelf.
 
 ## Usage
 
 To use the Joint Symmetry Tool:
 
-1. Click the button on the shelf that you registered the Joint Symmetry Tool to open the UI.
+1. Run `componentRelativeScale` from your shelf.
 2. Select the two joints you want to set up a symmetry constraint between. The first joint you select will be the source joint, and the second joint you select will be the target joint.
 3. Select the axis of symmetry (X, Y, or Z).
 4. Click the `Set Up Symmetry Constraint` button.
